@@ -58,7 +58,9 @@
     <Compile Include="Assets\Resources\Scripts\Enemys\M001_Slime.cs" />
     <Compile Include="Assets\Resources\Scripts\GridManager.cs" />
     <Compile Include="Assets\Resources\Scripts\TowerDragHandler.cs" />
+    <Compile Include="Assets\Resources\Scripts\EnemyMovement.cs" />
     <Compile Include="Assets\Resources\Scripts\TileController.cs" />
+    <Compile Include="Assets\Resources\Scripts\TileGrid.cs" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile-2-Pass.shader" />

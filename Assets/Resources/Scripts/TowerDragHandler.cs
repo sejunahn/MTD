@@ -1,101 +1,122 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-public class TowerDragHandler : MonoBehaviour, 
-    IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class TowerDragHandler : MonoBehaviour
 {
-    private Canvas canvas;
-    private RectTransform rectTransform;
-    private CanvasGroup canvasGroup;
-    private Vector3 originalPos;
+    private Camera mainCam;
+    private Vector3 offset;
+    private bool isDragging = false;
+
     private TileController originalTile;
+    private TileController targetTile;
 
-    void Awake()
+    void Start()
     {
-        rectTransform = GetComponent<RectTransform>();
-        canvasGroup = GetComponent<CanvasGroup>();
-        canvas = FindFirstObjectByType<Canvas>();
+        mainCam = Camera.main;
     }
 
-    public void OnPointerClick(PointerEventData eventData)
+    void OnMouseDown()
     {
-        // 정보 팝업 띄우기
-        Debug.Log("타워 정보 팝업");
+        // 드래그 시작
+        isDragging = true;
+        offset = transform.position - GetMouseWorldPos();
+
+        // 원래 있던 타일 저장
+        originalTile = GetTileUnderTower();
     }
 
-    public void OnBeginDrag(PointerEventData eventData)
+    void OnMouseDrag()
     {
-        originalPos = transform.position;
-        originalTile = GetCurrentTile();
-        canvasGroup.blocksRaycasts = false;
+        if (!isDragging) return;
+
+        // 마우스 위치로 이동 (y=0 고정)
+        Vector3 pos = GetMouseWorldPos() + offset;
+        pos.y = 0; 
+        transform.position = pos;
     }
 
-    public void OnDrag(PointerEventData eventData)
+    void OnMouseUp()
     {
-        rectTransform.position += (Vector3)eventData.delta / canvas.scaleFactor;
-    }
+        isDragging = false;
 
-    public void OnEndDrag(PointerEventData eventData)
-    {
-        canvasGroup.blocksRaycasts = true;
-
-        TileController targetTile = GetTileUnderPointer(eventData);
+        // 드롭 위치 확인
+        targetTile = GetTileUnderPointer();
         if (targetTile != null)
         {
             if (targetTile.IsEmpty)
             {
-                // 이동
                 MoveToTile(targetTile);
             }
-            else
+            else if (targetTile.towerOnTile != null)
             {
-                // 합성 체크
-                TryMerge(targetTile);
+                TryMergeOrSwap(targetTile);
             }
         }
         else
         {
-            // 원래 자리로 복귀
-            transform.position = originalPos;
+            // 타일 아니면 원위치 복귀
+            transform.position = originalTile.transform.position;
         }
     }
 
-    private TileController GetCurrentTile()
+    private Vector3 GetMouseWorldPos()
     {
-        return GetComponentInParent<TileController>();
+        Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
+        Plane ground = new Plane(Vector3.up, Vector3.zero);
+        if (ground.Raycast(ray, out float dist))
+        {
+            return ray.GetPoint(dist);
+        }
+        return Vector3.zero;
     }
 
-    private TileController GetTileUnderPointer(PointerEventData eventData)
+    private TileController GetTileUnderTower()
     {
-        var obj = eventData.pointerCurrentRaycast.gameObject;
-        return obj ? obj.GetComponent<TileController>() : null;
+        Collider col = Physics.OverlapSphere(transform.position, 0.1f)[0];
+        return col.GetComponent<TileController>();
     }
 
-    private void MoveToTile(TileController targetTile)
+    private TileController GetTileUnderPointer()
+    {
+        Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit hit, 100f))
+        {
+            return hit.collider.GetComponent<TileController>();
+        }
+        return null;
+    }
+
+    private void MoveToTile(TileController tile)
     {
         if (originalTile != null) originalTile.towerOnTile = null;
-        targetTile.towerOnTile = gameObject;
-        transform.position = targetTile.transform.position;
+
+        transform.position = tile.transform.position;
+        tile.towerOnTile = gameObject;
     }
 
-    private void TryMerge(TileController targetTile)
+    private void TryMergeOrSwap(TileController tile)
     {
-        var otherTower = targetTile.towerOnTile;
-        if (otherTower != null && otherTower.name == gameObject.name)
+        var other = tile.towerOnTile;
+        if (other != null && other.name == gameObject.name)
         {
+            // 합성
             Debug.Log("합성 성공!");
-            Destroy(otherTower);
-            // 업그레이드된 타워 생성
-            GameObject merged = Instantiate(gameObject, targetTile.transform.position, Quaternion.identity);
-            targetTile.towerOnTile = merged;
+            Destroy(other);
+
+            // 업그레이드된 타워 프리팹 생성 (임시로 자기 자신 재생성)
+            GameObject merged = Instantiate(gameObject, tile.transform.position, Quaternion.identity);
+            tile.towerOnTile = merged;
+
             Destroy(gameObject);
         }
         else
         {
             // 교환
-            Vector3 tempPos = otherTower.transform.position;
-            otherTower.transform.position = originalPos;
+            Vector3 tempPos = other.transform.position;
+            other.transform.position = originalTile.transform.position;
             transform.position = tempPos;
+
+            tile.towerOnTile = gameObject;
+            originalTile.towerOnTile = other;
         }
     }
 }
