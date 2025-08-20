@@ -7,7 +7,7 @@ public static class EnemyFactory
     {
         return id switch
         {
-            "M001" => new Slime(),
+            "M001" => new M001_Slime(),
             
             _ => null
         };
