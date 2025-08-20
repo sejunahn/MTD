@@ -1,45 +1,62 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System;
+using System.Collections.Generic;
 
-public class PageManager : MonoBehaviour
+public static class PageManager
 {
-    public static PageManager Instance;
+    // ÇöÀç ¾À ÀÌ¸§
+    public static string CurrentSceneName { get; private set; }
 
-    private void Awake()
+    // ¾À ÀüÈ¯ ÀÌº¥Æ® (¿É¼Ç)
+    public static event Action<string> OnSceneChanged;
+
+    // ¾À ÀÌ¸§ »ó¼ö
+    public static class Scenes
     {
-        // ì‹±ê¸€í†¤ ì²˜ë¦¬
-        if (Instance == null)
+        public const string Splash = "00.Splash";
+        public const string Main = "01.Main";
+        public const string InGame = "02.InGame";
+    }
+
+    // ¾À ·Îµå
+    public static void LoadScene(string sceneName)
+    {
+        if (string.IsNullOrEmpty(sceneName))
         {
-            Instance = this;
-            DontDestroyOnLoad(gameObject); // ì”¬ ë„˜ì–´ê°€ë„ ìœ ì§€
+            Debug.LogError("PageManager: LoadScene¿¡ À¯È¿ÇÏÁö ¾ÊÀº ¾À ÀÌ¸§ÀÌ µé¾î¿Ô½À´Ï´Ù.");
+            return;
+        }
+
+        SceneManager.LoadScene(sceneName);
+        CurrentSceneName = sceneName;
+        OnSceneChanged?.Invoke(sceneName);
+    }
+
+    // ¾À Àç·Îµå
+    public static void ReloadScene()
+    {
+        if (string.IsNullOrEmpty(CurrentSceneName))
+        {
+            Debug.LogError("PageManager: ÇöÀç ¾ÀÀÌ ¼³Á¤µÇÁö ¾Ê¾Ò½À´Ï´Ù.");
+            return;
+        }
+
+        LoadScene(CurrentSceneName);
+    }
+
+    // ´ÙÀ½ ¾À ·Îµå (¾À ºôµå ÀÎµ¦½º ±âÁØ)
+    public static void LoadNextScene()
+    {
+        int nextIndex = SceneManager.GetActiveScene().buildIndex + 1;
+        if (nextIndex < SceneManager.sceneCountInBuildSettings)
+        {
+            string nextSceneName = System.IO.Path.GetFileNameWithoutExtension(SceneUtility.GetScenePathByBuildIndex(nextIndex));
+            LoadScene(nextSceneName);
         }
         else
         {
-            Destroy(gameObject);
+            Debug.LogWarning("PageManager: ´ÙÀ½ ¾ÀÀÌ ¾ø½À´Ï´Ù.");
         }
-    }
-
-    /// <summary>
-    /// ì”¬ ì´ë¦„ìœ¼ë¡œ ì´ë™
-    /// </summary>
-    public void LoadScene(string sceneName)
-    {
-        SceneManager.LoadScene(sceneName);
-    }
-
-    /// <summary>
-    /// Splash â†’ Main ì”¬ ì´ë™
-    /// </summary>
-    public void GoToMain()
-    {
-        LoadScene("01.Main");
-    }
-
-    /// <summary>
-    /// Main â†’ Game ì”¬ ì´ë™
-    /// </summary>
-    public void GoToGame()
-    {
-        LoadScene("02.InGame");
     }
 }

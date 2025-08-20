@@ -4,45 +4,52 @@ using System.Collections;
 
 public class SplashController : MonoBehaviour
 {
-    public Image fadeImage;      // í˜ì´ë“œìš© UI (Canvasì— ì „ì²´í™”ë©´ ê²€ì€ìƒ‰ Image)
-    public float fadeDuration = 1f; // í˜ì´ë“œ ì¸/ì•„ì›ƒ ì‹œê°„
-    public float stayDuration = 2f; // í™”ë©´ ìœ ì§€ ì‹œê°„
+    [Header("Fade ¼³Á¤")]
+    public Image fadeImage;          // ÀüÃ¼ È­¸éÀ» µ¤´Â Èò»ö/°ËÀº»ö Image
+    public float fadeDuration = 1f;  // ÆäÀÌµå ÀÎ/¾Æ¿ô ½Ã°£
+    public float stayDuration = 2f;  // ÆäÀÌµå ÈÄ À¯Áö ½Ã°£
 
     private void Start()
     {
+        // ½ÃÀÛ ½Ã ÄÚ·çÆ¾ ½ÇÇà
         StartCoroutine(SplashFlow());
     }
 
     private IEnumerator SplashFlow()
     {
-        // 1. í˜ì´ë“œ ì¸ (ê²€ì€ í™”ë©´ â†’ íˆ¬ëª…)
+        // 1. ÆäÀÌµå ÀÎ (°ËÀº È­¸é ¡æ Åõ¸í)
         yield return StartCoroutine(Fade(1f, 0f));
 
-        // 2. 2ì´ˆê°„ ìœ ì§€
+        // 2. À¯Áö
         yield return new WaitForSeconds(stayDuration);
 
-        // 3. í˜ì´ë“œ ì•„ì›ƒ (íˆ¬ëª… â†’ ê²€ì€ í™”ë©´)
+        // 3. ÆäÀÌµå ¾Æ¿ô (Åõ¸í ¡æ °ËÀº È­¸é)
         yield return StartCoroutine(Fade(0f, 1f));
 
-        // 4. ë©”ì¸ ì”¬ìœ¼ë¡œ ì´ë™
-        PageManager.Instance.GoToMain();
+        // 4. Main ¾ÀÀ¸·Î ÀüÈ¯
+        PageManager.LoadScene(PageManager.Scenes.Main);
     }
 
-    /// <summary>
-    /// ì•ŒíŒŒ ê°’ì„ from â†’ toë¡œ ì„œì„œíˆ ë°”ê¿”ì¤Œ
-    /// </summary>
-    private IEnumerator Fade(float from, float to)
+    private IEnumerator Fade(float fromAlpha, float toAlpha)
     {
-        float t = 0f;
-        Color c = fadeImage.color;
-
-        while (t < fadeDuration)
+        if (fadeImage == null)
         {
-            t += Time.deltaTime;
-            float normalized = Mathf.Clamp01(t / fadeDuration);
-            c.a = Mathf.Lerp(from, to, normalized);
-            fadeImage.color = c;
+            Debug.LogError("SplashController: fadeImage°¡ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
+            yield break;
+        }
+
+        float timer = 0f;
+        Color color = fadeImage.color;
+
+        while (timer < fadeDuration)
+        {
+            timer += Time.deltaTime;
+            float alpha = Mathf.Lerp(fromAlpha, toAlpha, timer / fadeDuration);
+            fadeImage.color = new Color(color.r, color.g, color.b, alpha);
             yield return null;
         }
+
+        // ÃÖÁ¾ ¾ËÆÄ°ª È®½ÇÇÏ°Ô Àû¿ë
+        fadeImage.color = new Color(color.r, color.g, color.b, toAlpha);
     }
 }
