@@ -46,10 +46,12 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.0.29f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Resources\Scripts\Towers\ArrowTower.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemyFactory.cs" />
     <Compile Include="Assets\Resources\Scripts\IEnemy.cs" />
     <Compile Include="Assets\Resources\Scripts\ITower.cs" />
-    <Compile Include="Assets\Resources\Scripts\Enemy\M001_Slime.cs" />
+    <Compile Include="Assets\Resources\Scripts\Enemys\M001_Slime.cs" />
+    <Compile Include="Assets\Resources\Scripts\TowerFactory.cs" />
     <Reference Include="UnityEngine">
       <HintPath>C:\Program Files\Unity\Hub\Editor\6000.0.29f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
     </Reference>

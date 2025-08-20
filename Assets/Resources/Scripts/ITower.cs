@@ -1,16 +1,12 @@
 using UnityEngine;
 
-public class ITower : MonoBehaviour
+public interface ITower
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    string Id { get; }
+    string Name { get; }
+    int Attack { get; }
+    float AttackSpeed { get; }
+    float Range { get; }
+    int MergeLevel { get; }
+    int Cost { get; }
 }
