@@ -2,121 +2,125 @@ using UnityEngine;
 
 public class TowerDragHandler : MonoBehaviour
 {
+    private ITower tower;
     private Camera mainCam;
-    private Vector3 offset;
     private bool isDragging = false;
+    private float zOffset;
 
-    private TileController originalTile;
-    private TileController targetTile;
+    private TileController currentTile; // 현재 올라가 있는 타일
 
     void Start()
     {
         mainCam = Camera.main;
+        // 시작 시 타일과 연동
+        
     }
 
     void OnMouseDown()
     {
-        // 드래그 시작
         isDragging = true;
-        offset = transform.position - GetMouseWorldPos();
-
-        // 원래 있던 타일 저장
-        originalTile = GetTileUnderTower();
+        zOffset = mainCam.WorldToScreenPoint(transform.position).z;
+        currentTile = GetTileUnderPosition(transform.position);
     }
 
     void OnMouseDrag()
     {
         if (!isDragging) return;
 
-        // 마우스 위치로 이동 (y=0 고정)
-        Vector3 pos = GetMouseWorldPos() + offset;
-        pos.y = 0; 
-        transform.position = pos;
+        Vector3 mousePos = Input.mousePosition;
+        mousePos.z = zOffset;
+        Vector3 worldPos = mainCam.ScreenToWorldPoint(mousePos);
+
+        transform.position = worldPos;
     }
 
     void OnMouseUp()
     {
         isDragging = false;
 
-        // 드롭 위치 확인
-        targetTile = GetTileUnderPointer();
-        if (targetTile != null)
+        // 마우스 뗐을 때, 현재 위치 기준으로 타일 찾기
+        TileController targetTile = GetTileUnderPosition(transform.position);
+        if (targetTile == null || targetTile.tileType != TileType.Ground)
+            return;
+        
+        if (targetTile != null && targetTile.IsEmpty)
         {
-            if (targetTile.IsEmpty)
-            {
-                MoveToTile(targetTile);
-            }
-            else if (targetTile.towerOnTile != null)
-            {
-                TryMergeOrSwap(targetTile);
-            }
+            // // 타일 위에 정확히 위치시킴
+            // transform.position = targetTile.transform.position;
+            // targetTile.towerOnTile = gameObject;
+            // currentTile.towerOnTile = null;
+            // currentTile = targetTile;
+            MoveToTile(targetTile);
         }
         else
         {
-            // 타일 아니면 원위치 복귀
-            transform.position = originalTile.transform.position;
+            // if (currentTile != null)
+            //     transform.position = currentTile.transform.position;
+            TryMergeOrSwap(targetTile);
+
         }
     }
-
-    private Vector3 GetMouseWorldPos()
+    private void MoveToTile(TileController targetTile)
     {
-        Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
-        Plane ground = new Plane(Vector3.up, Vector3.zero);
-        if (ground.Raycast(ray, out float dist))
+        // 원래 타일 비우기
+        if (currentTile != null)
+            currentTile.towerOnTile = null;
+
+        // 새 타일에 자신 배치
+        transform.position = targetTile.transform.position;
+        targetTile.towerOnTile = gameObject;
+
+        // 새 타일을 "현재 타일"로 갱신
+        currentTile = targetTile;
+    }
+    
+    private void TryMergeOrSwap(TileController tile)
+    {
+        GameObject other = tile.towerOnTile;
+        if (other == null) return;
+
+        var thisTower = GetComponent<ITower>();
+        var otherTower = other.GetComponent<ITower>();
+
+        if (thisTower != null && otherTower != null && thisTower.Id == otherTower.Id)
         {
-            return ray.GetPoint(dist);
+            // 같은 타워라면 합성
+            Debug.Log($"합성 성공! {thisTower.TowerName}");
+
+            Destroy(other);
+            Destroy(gameObject);
+
+            // 업그레이드된 타워 프리팹 생성 (임시: 자기 자신 복제 후 Upgrade 호출)
+            GameObject merged = Instantiate(other, tile.transform.position, Quaternion.identity);
+            var mergedTower = merged.GetComponent<ITower>();
+            mergedTower?.Upgrade();
+
+            tile.towerOnTile = merged;
         }
-        return Vector3.zero;
+        else
+        {
+            // 자리 교환
+            Debug.Log("자리 교환!");
+
+            Vector3 tempPos = other.transform.position;
+            other.transform.position = currentTile.transform.position;
+            transform.position = tempPos;
+
+            currentTile.towerOnTile = other;
+            tile.towerOnTile = gameObject;
+            currentTile = tile;
+        }
     }
 
-    private TileController GetTileUnderTower()
+    
+    private TileController GetTileUnderPosition(Vector3 pos)
     {
-        Collider col = Physics.OverlapSphere(transform.position, 0.1f)[0];
-        return col.GetComponent<TileController>();
-    }
-
-    private TileController GetTileUnderPointer()
-    {
-        Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit, 100f))
+        Ray ray = new Ray(pos + Vector3.up * 2f, Vector3.down); // 조금만 위에서 쏨
+        if (Physics.Raycast(ray, out RaycastHit hit, 10f)) // 타일 전용 Layer
         {
             return hit.collider.GetComponent<TileController>();
         }
         return null;
     }
 
-    private void MoveToTile(TileController tile)
-    {
-        if (originalTile != null) originalTile.towerOnTile = null;
-
-        transform.position = tile.transform.position;
-        tile.towerOnTile = gameObject;
-    }
-
-    private void TryMergeOrSwap(TileController tile)
-    {
-        var other = tile.towerOnTile;
-        if (other != null && other.name == gameObject.name)
-        {
-            // 합성
-            Debug.Log("합성 성공!");
-            Destroy(other);
-
-            // 업그레이드된 타워 프리팹 생성 (임시로 자기 자신 재생성)
-            GameObject merged = Instantiate(gameObject, tile.transform.position, Quaternion.identity);
-            tile.towerOnTile = merged;
-
-            Destroy(gameObject);
-        }
-        else
-        {
-            // 교환
-            Vector3 tempPos = other.transform.position;
-            other.transform.position = originalTile.transform.position;
-            transform.position = tempPos;
-
-            tile.towerOnTile = gameObject;
-            originalTile.towerOnTile = other;
-        }
-    }
 }

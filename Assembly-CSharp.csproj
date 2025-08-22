@@ -46,17 +46,18 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.0.29f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Resources\Scripts\Towers\ArrowTower.cs" />
-    <Compile Include="Assets\Resources\Scripts\EnemyFactory.cs" />
     <Compile Include="Assets\Resources\Scripts\02.MainScene\MainSceneController.cs" />
     <Compile Include="Assets\Resources\Scripts\IEnemy.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemySpawner.cs" />
     <Compile Include="Assets\Resources\Scripts\ITower.cs" />
     <Compile Include="Assets\Resources\Scripts\01.SplashScene\SplashController.cs" />
+    <Compile Include="Assets\Resources\Scripts\Towers\Tower.cs" />
     <Compile Include="Assets\Resources\Scripts\00.Page\PageManager.cs" />
     <Compile Include="Assets\Resources\Scripts\TowerManager.cs" />
     <Compile Include="Assets\Resources\Scripts\Enemys\M001_Slime.cs" />
+    <Compile Include="Assets\Resources\Scripts\SimpleDragHandler.cs" />
     <Compile Include="Assets\Resources\Scripts\GridManager.cs" />
+    <Compile Include="Assets\Resources\Scripts\GameSceneManager.cs" />
     <Compile Include="Assets\Resources\Scripts\TowerDragHandler.cs" />
     <Compile Include="Assets\Resources\Scripts\EnemyMovement.cs" />
     <Compile Include="Assets\Resources\Scripts\TileController.cs" />
