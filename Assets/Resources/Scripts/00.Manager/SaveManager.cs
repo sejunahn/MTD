@@ -1,71 +1,71 @@
 using UnityEngine;
 
+[System.Serializable]
+public class StatData
+{
+    private string levelKey;
+    private string priceKey;
+
+    public int Level { get; set; }
+    public int Price { get; set; }
+
+    public StatData(string keyPrefix, int defaultLevel = 1, int defaultPrice = 100)
+    {
+        levelKey = keyPrefix + "_Level";
+        priceKey = keyPrefix + "_Price";
+        Load(defaultLevel, defaultPrice);
+    }
+
+    public void Save()
+    {
+        PlayerPrefs.SetInt(levelKey, Level);
+        PlayerPrefs.SetInt(priceKey, Price);
+    }
+
+    public void Load(int defaultLevel = 1, int defaultPrice = 100)
+    {
+        Level = PlayerPrefs.GetInt(levelKey, defaultLevel);
+        Price = PlayerPrefs.GetInt(priceKey, defaultPrice);
+    }
+}
+
 public static class SaveManager
 {
-    // 저장 키 상수
     private const string MoneyKey = "Money";
-    private const string StatALevelKey = "StatA_Level";
-    private const string StatAPriceKey = "StatA_Price";
-    private const string StatBLevelKey = "StatB_Level";
-    private const string StatBPriceKey = "StatB_Price";
-    private const string StatCLevelKey = "StatC_Level";
-    private const string StatCPriceKey = "StatC_Price";
-    private const string StatDLevelKey = "StatD_Level";
-    private const string StatDPriceKey = "StatD_Price";
 
-    // 현재 데이터 캐싱 (게임 중 참조용)
     public static int Money { get; set; }
-    public static int StatA_Level { get; set; }
-    public static int StatA_Price { get; set; }
-    public static int StatB_Level { get; set; }
-    public static int StatB_Price { get; set; }
-    public static int StatC_Level { get; set; }
-    public static int StatC_Price { get; set; }
-    public static int StatD_Level { get; set; }
-    public static int StatD_Price { get; set; }
 
-    // 저장 함수
+    // Stat 묶음 관리
+    public static StatData StatA { get; private set; } = new StatData("StatA");
+    public static StatData StatB { get; private set; } = new StatData("StatB");
+    public static StatData StatC { get; private set; } = new StatData("StatC");
+    public static StatData StatD { get; private set; } = new StatData("StatD");
+
     public static void SaveData()
     {
         PlayerPrefs.SetInt(MoneyKey, Money);
 
-        PlayerPrefs.SetInt(StatALevelKey, StatA_Level);
-        PlayerPrefs.SetInt(StatAPriceKey, StatA_Price);
-
-        PlayerPrefs.SetInt(StatBLevelKey, StatB_Level);
-        PlayerPrefs.SetInt(StatBPriceKey, StatB_Price);
-
-        PlayerPrefs.SetInt(StatCLevelKey, StatC_Level);
-        PlayerPrefs.SetInt(StatCPriceKey, StatC_Price);
-
-        PlayerPrefs.SetInt(StatDLevelKey, StatD_Level);
-        PlayerPrefs.SetInt(StatDPriceKey, StatD_Price);
+        StatA.Save();
+        StatB.Save();
+        StatC.Save();
+        StatD.Save();
 
         PlayerPrefs.Save();
         Debug.Log("SaveManager: 데이터 저장 완료");
     }
 
-    // 불러오기 함수
     public static void LoadData()
     {
-        Money = PlayerPrefs.GetInt(MoneyKey, 1000000);
+        Money = PlayerPrefs.GetInt(MoneyKey, 0);
 
-        StatA_Level = PlayerPrefs.GetInt(StatALevelKey, 1);
-        StatA_Price = PlayerPrefs.GetInt(StatAPriceKey, 100);
-
-        StatB_Level = PlayerPrefs.GetInt(StatBLevelKey, 1);
-        StatB_Price = PlayerPrefs.GetInt(StatBPriceKey, 100);
-
-        StatC_Level = PlayerPrefs.GetInt(StatCLevelKey, 1);
-        StatC_Price = PlayerPrefs.GetInt(StatCPriceKey, 100);
-
-        StatD_Level = PlayerPrefs.GetInt(StatDLevelKey, 1);
-        StatD_Price = PlayerPrefs.GetInt(StatDPriceKey, 100);
+        StatA.Load();
+        StatB.Load();
+        StatC.Load();
+        StatD.Load();
 
         Debug.Log("SaveManager: 데이터 불러오기 완료");
     }
 
-    // 저장된 데이터 초기화 (테스트용)
     public static void ClearData()
     {
         PlayerPrefs.DeleteAll();

@@ -35,17 +35,17 @@ public class MainSceneController : MonoBehaviour
     {
         text_money.text = SaveManager.Money.ToString();
 
-        text_stat_A_level.text = SaveManager.StatA_Level.ToString();
-        text_stat_A_price.text = SaveManager.StatA_Price.ToString();
+        text_stat_A_level.text = SaveManager.StatA.Level.ToString();
+        text_stat_A_price.text = SaveManager.StatA.Price.ToString();
 
-        text_stat_B_level.text = SaveManager.StatB_Level.ToString();
-        text_stat_B_price.text = SaveManager.StatB_Price.ToString();
+        text_stat_B_level.text = SaveManager.StatB.Level.ToString();
+        text_stat_B_price.text = SaveManager.StatB.Price.ToString();
 
-        text_stat_C_level.text = SaveManager.StatC_Level.ToString();
-        text_stat_C_price.text = SaveManager.StatC_Price.ToString();
+        text_stat_C_level.text = SaveManager.StatC.Level.ToString();
+        text_stat_C_price.text = SaveManager.StatC.Price.ToString();
 
-        text_stat_D_level.text = SaveManager.StatD_Level.ToString();
-        text_stat_D_price.text = SaveManager.StatD_Price.ToString();
+        text_stat_D_level.text = SaveManager.StatD.Level.ToString();
+        text_stat_D_price.text = SaveManager.StatD.Price.ToString();
     }
 
     public void Upgrade(string stat)
@@ -53,28 +53,28 @@ public class MainSceneController : MonoBehaviour
         switch (stat)
         {
             case "A":
-                SaveManager.Money -= SaveManager.StatA_Price;
+                SaveManager.Money -= SaveManager.StatA.Price;
 
-                SaveManager.StatA_Level += 1;
-                SaveManager.StatA_Price += 100;
+                SaveManager.StatA.Level += 1;
+                SaveManager.StatA.Price += 100;
                 break;
             case "B":
-                SaveManager.Money -= SaveManager.StatB_Price;
+                SaveManager.Money -= SaveManager.StatB.Price;
 
-                SaveManager.StatB_Level += 1;
-                SaveManager.StatB_Price += 100;
+                SaveManager.StatB.Level += 1;
+                SaveManager.StatB.Price += 100;
                 break;
             case "C":
-                SaveManager.Money -= SaveManager.StatC_Price;
+                SaveManager.Money -= SaveManager.StatC.Price;
 
-                SaveManager.StatC_Level += 1;
-                SaveManager.StatC_Price += 100;
+                SaveManager.StatC.Level += 1;
+                SaveManager.StatC.Price += 100;
                 break;
             case "D":
-                SaveManager.Money -= SaveManager.StatD_Price;
+                SaveManager.Money -= SaveManager.StatD.Price;
 
-                SaveManager.StatD_Level += 1;
-                SaveManager.StatD_Price += 100;
+                SaveManager.StatD.Level += 1;
+                SaveManager.StatD.Price += 100;
                 break;
         }
 
