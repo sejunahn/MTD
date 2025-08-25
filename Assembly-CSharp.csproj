@@ -9,8 +9,9 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace></RootNamespace>
-    <ProjectGuid>{07ED5D4A-9AAB-7652-3D8E-9A94A9777BB0}</ProjectGuid>
+    <RootNamespace>
+    </RootNamespace>
+    <ProjectGuid>{4A5DED07-AB9A-5276-3D8E-9A94A9777BB0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -67,7 +68,8 @@
     <Compile Include="Assets\Resources\Scripts\ITower.cs" />
     <Compile Include="Assets\Resources\Scripts\01.SplashScene\SplashController.cs" />
     <Compile Include="Assets\Resources\Scripts\Towers\Tower.cs" />
-    <Compile Include="Assets\Resources\Scripts\00.Page\PageManager.cs" />
+    <Compile Include="Assets\Resources\Scripts\00.Manager\SaveManager.cs" />
+    <Compile Include="Assets\Resources\Scripts\00.Manager\PageManager.cs" />
     <Compile Include="Assets\Resources\Scripts\TowerManager.cs" />
     <Compile Include="Assets\Resources\Scripts\Enemys\M001_Slime.cs" />
     <Compile Include="Assets\Resources\Scripts\SimpleDragHandler.cs" />
