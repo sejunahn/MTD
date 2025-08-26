@@ -12,8 +12,6 @@ public class TowerDragHandler : MonoBehaviour
     void Start()
     {
         mainCam = Camera.main;
-        // 시작 시 타일과 연동
-        
     }
 
     void OnMouseDown()
@@ -45,19 +43,11 @@ public class TowerDragHandler : MonoBehaviour
         
         if (targetTile != null && targetTile.IsEmpty)
         {
-            // // 타일 위에 정확히 위치시킴
-            // transform.position = targetTile.transform.position;
-            // targetTile.towerOnTile = gameObject;
-            // currentTile.towerOnTile = null;
-            // currentTile = targetTile;
             MoveToTile(targetTile);
         }
         else
         {
-            // if (currentTile != null)
-            //     transform.position = currentTile.transform.position;
             TryMergeOrSwap(targetTile);
-
         }
     }
     private void MoveToTile(TileController targetTile)
