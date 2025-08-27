@@ -30,13 +30,36 @@ public class Tower : MonoBehaviour,ITower
         attackPower = Mathf.RoundToInt(attackPower * 1.5f);
         sellPrice += 50;
     }
+    
+    private void Update()
+    {
+        cooldownTimer -= Time.deltaTime;
+        if (cooldownTimer <= 0f)
+        {
+            Enemy target = FindClosestEnemy();
+            if (target != null)
+            {
+                target.TakeDamage(attackPower);
+                cooldownTimer = AttackSpeed;
+            }
+        }
+    }
+    private float cooldownTimer;
+    private Enemy FindClosestEnemy()
+    {
+        Enemy[] enemies = FindObjectsOfType<Enemy>();
+        Enemy closest = null;
+        float minDist = Mathf.Infinity;
 
-
-    // public string Id => "T001";
-    // public string Name => "기본포탑";
-    // public int Attack => 10;
-    // public float AttackSpeed => 1.0f;
-    // public float Range => 2f;
-    // public int MergeLevel => 3;
-    // public int Cost => 50;
+        foreach (var e in enemies)
+        {
+            float dist = Vector3.Distance(transform.position, e.transform.position);
+            if (dist < attackRange && dist < minDist)
+            {
+                closest = e;
+                minDist = dist;
+            }
+        }
+        return closest;
+    }
 }

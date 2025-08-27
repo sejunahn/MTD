@@ -4,37 +4,46 @@ using UnityEngine.SceneManagement;
 
 public class GameSceneManager : MonoBehaviour
 {
-    [SerializeField] EnemySpawner spawner;
-    [SerializeField] private int maxEnemies = 150;
+    [Header("Managers & Spawner")]
+    [SerializeField] private EnemySpawner spawner;
 
-    private int currentLevel = 1;
-    private float levelDuration = 60f; // 1분마다 레벨 증가
-    private float spawnDuration = 20f; // 레벨 시작 시 20초간 스폰
-    private int spawnPerSecond = 1;    // 초당 1마리
-    public int ActiveEnemyCount = 0;
+    [Header("Enemy Settings")]
+    [SerializeField] private int maxEnemies = 150;
+    [SerializeField] private string defaultEnemyId = "M1"; // 기본 적 ID
+
+    [Header("Game Settings")]
+    [SerializeField] private float levelDuration = 60f; // (선택 대기 포함) 레벨 1분 주기
+    [SerializeField] private float spawnDuration = 20f; // 레벨 시작 시 20초 동안만 스폰
+    [SerializeField] private int spawnPerSecond = 1;    // 초당 적 수
+
+    public int ActiveEnemyCount { get; set; } = 0;
+    public int CurrentLevel { get; private set; } = 1;
+    public int Gold { get; private set; } = 0;
+
+    private bool isWaitingForChoice = false;
+
     private void Start()
     {
-        //여기서 몬가 스타트 애니메이션
-        
-        //대기 했다가
-        
-        //여기서 레벨 시작, 이후 계속진행
-        StartCoroutine(LevelRoutine());
+        StartCoroutine(GameLoop());
     }
 
-    private IEnumerator LevelRoutine()
+    private IEnumerator GameLoop()
     {
         while (true)
         {
-            Debug.Log($"레벨 {currentLevel} 시작!");
+            Debug.Log($"레벨 {CurrentLevel} 시작!");
 
-            // 20초간 적 생성 루틴
+            // 20초간 적 스폰
             yield return StartCoroutine(SpawnEnemies());
 
-            // 1분 기다렸다가 다음 레벨로
-            yield return new WaitForSeconds(levelDuration);
+            // 플레이어 선택 대기
+            isWaitingForChoice = true;
+            Debug.Log("플레이어 선택 대기 중...");
 
-            currentLevel++;
+            yield return new WaitUntil(() => !isWaitingForChoice);
+
+            // 다음 레벨 준비
+            CurrentLevel++;
         }
     }
 
@@ -49,17 +58,35 @@ public class GameSceneManager : MonoBehaviour
                 GameOver();
                 yield break;
             }
-            
-            spawner.SpawnEnemy("M"+1);
+
+            // EnemySpawner를 통해 적 생성
+            var enemy = spawner.SpawnEnemy(defaultEnemyId, CurrentLevel, this);
+            if (enemy != null)
+            {
+                ActiveEnemyCount++;
+            }
+
             yield return new WaitForSeconds(1f / spawnPerSecond);
             elapsed += 1f;
         }
     }
-    
+
+    public void EnemyKilled(int reward)
+    {
+        ActiveEnemyCount--;
+        Gold += reward;
+        Debug.Log($"골드 획득! 현재 골드: {Gold}");
+    }
+
+    public void PlayerMadeChoice()
+    {
+        Debug.Log("플레이어가 선택을 완료했습니다.");
+        isWaitingForChoice = false;
+    }
+
     private void GameOver()
     {
         Debug.Log("게임 패배!");
-        // 씬 재시작 예시
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public interface IEnemy
 {
     string Id { get; }
@@ -8,4 +6,6 @@ public interface IEnemy
     float MoveSpeed { get; }
     int Reward { get; }
     string Trait { get; }
+
+    void TakeDamage(int damage);
 }

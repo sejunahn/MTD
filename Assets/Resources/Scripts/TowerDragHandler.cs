@@ -36,20 +36,36 @@ public class TowerDragHandler : MonoBehaviour
     {
         isDragging = false;
 
-        // 마우스 뗐을 때, 현재 위치 기준으로 타일 찾기
         TileController targetTile = GetTileUnderPosition(transform.position);
+
+        // 유효하지 않은 타일이면 원래 자리로 복귀
         if (targetTile == null || targetTile.tileType != TileType.Ground)
+        {
+            if (currentTile != null)
+                transform.position = currentTile.transform.position;
             return;
-        
-        if (targetTile != null && targetTile.IsEmpty)
+        }
+
+        // ⬇️ 여기서 같은 타일인지 먼저 체크
+        if (targetTile == currentTile)
+        {
+            // 같은 자리면 그냥 제자리 복귀, 합성/스왑 로직 스킵
+            transform.position = currentTile.transform.position;
+            return;
+        }
+
+        // 빈 타일이면 이동
+        if (targetTile.IsEmpty)
         {
             MoveToTile(targetTile);
         }
         else
         {
+            // 다른 타일에 타워가 있으면 합성 or 자리교환
             TryMergeOrSwap(targetTile);
         }
     }
+
     private void MoveToTile(TileController targetTile)
     {
         // 원래 타일 비우기

@@ -1,31 +1,37 @@
 using UnityEngine;
+
 public class EnemySpawner : MonoBehaviour
 {
-    [System.Serializable]
-    public class EnemyData
-    {
-        public string enemyId;
-        public GameObject prefab;
-    }
+    [Header("Database")]
+    public EnemyData[] enemyDatabase;
 
-    public EnemyData[] enemyPrefabs;
-    public Transform spawnPoint;
+    [Header("Waypoints (기본 경로)")]
+    public Transform[] waypoints; // 기본 4개 웨이포인트
+    [SerializeField] private int defaultLaps = 2; // 몇 바퀴 돌릴지 (기본값)
 
-    public void SpawnEnemy(string enemyId)
+    public Enemy SpawnEnemy(string enemyId, int level, GameSceneManager gm, int laps = -1)
     {
-        foreach (var enemy in enemyPrefabs)
+        foreach (var data in enemyDatabase)
         {
-            if (enemy.enemyId == enemyId)
+            if (data.enemyId == enemyId)
             {
-                Instantiate(enemy.prefab, spawnPoint.position, Quaternion.identity);
-                return;
+                GameObject go = Instantiate(data.prefab);
+                Enemy e = go.GetComponent<Enemy>();
+
+                if (e != null)
+                {
+                    int lapCount = (laps == -1) ? defaultLaps : laps;
+                    e.Initialize(data, level, gm, waypoints, lapCount);
+                    return e;
+                }
+                else
+                {
+                    Debug.LogError($"[EnemySpawner] {data.prefab.name} 프리팹에 Enemy 컴포넌트가 없습니다!");
+                }
             }
         }
-    }
 
-    public void SpawnSlime()
-    {
-        SpawnEnemy("M001");
+        Debug.LogError($"[EnemySpawner] enemyId {enemyId} 를 찾을 수 없습니다!");
+        return null;
     }
-
 }
