@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -15,13 +16,23 @@ public class GameSceneManager : MonoBehaviour
     [SerializeField] private float levelDuration = 60f; // (선택 대기 포함) 레벨 1분 주기
     [SerializeField] private float spawnDuration = 20f; // 레벨 시작 시 20초 동안만 스폰
     [SerializeField] private int spawnPerSecond = 1;    // 초당 적 수
+    
+    private Queue<Projectile> projectilePool = new Queue<Projectile>();
+    [SerializeField]private GameObject projectilePrefab;
 
+    public static GameSceneManager Instance { get; private set; }
     public int ActiveEnemyCount { get; set; } = 0;
     public int CurrentLevel { get; private set; } = 1;
     public int Gold { get; private set; } = 0;
 
     private bool isWaitingForChoice = false;
 
+    private void Awake()
+    {
+        Instance = this;
+        InitProjectilePool();
+    }
+    
     private void Start()
     {
         StartCoroutine(GameLoop());
@@ -70,7 +81,31 @@ public class GameSceneManager : MonoBehaviour
             elapsed += 1f;
         }
     }
+    private void InitProjectilePool()
+    {
+        for (int i = 0; i < 30; i++)
+        {
+            GameObject obj = Instantiate(projectilePrefab);
+            obj.SetActive(false);
+            projectilePool.Enqueue(obj.GetComponent<Projectile>());
+        }
+    }
 
+    public void FireProjectile(Transform spawnPos, Enemy target, int damage)
+    {
+        if (projectilePool.Count == 0) InitProjectilePool();
+
+        Projectile proj = projectilePool.Dequeue();
+        proj.transform.position = spawnPos.position;
+        proj.Init(target, damage);
+    }
+
+    public void ReturnProjectile(Projectile proj)
+    {
+        proj.gameObject.SetActive(false);
+        projectilePool.Enqueue(proj);
+    }
+    
     public void EnemyKilled(int reward)
     {
         ActiveEnemyCount--;

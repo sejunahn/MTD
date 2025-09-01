@@ -1,35 +1,34 @@
 using UnityEngine;
 
-public class TowerDragHandler : MonoBehaviour
+public class SimpleDragHandler : MonoBehaviour
 {
-    private ITower tower;
     private Camera mainCam;
     private bool isDragging = false;
     private float zOffset;
-
-    private TileController currentTile; // 현재 올라가 있는 타일
-
+    private TileController currentTile; 
     void Start()
     {
         mainCam = Camera.main;
-    }
-
-    void OnMouseDown()
-    {
-        isDragging = true;
-        zOffset = mainCam.WorldToScreenPoint(transform.position).z;
-        currentTile = GetTileUnderPosition(transform.position);
     }
 
     void OnMouseDrag()
     {
         if (!isDragging) return;
 
+        // 마우스 위치를 월드 좌표로 변환
         Vector3 mousePos = Input.mousePosition;
-        mousePos.z = zOffset;
+        mousePos.z = zOffset; 
         Vector3 worldPos = mainCam.ScreenToWorldPoint(mousePos);
 
         transform.position = worldPos;
+    }
+    private void OnMouseDown()
+    {
+        isDragging = true;
+        zOffset = mainCam.WorldToScreenPoint(transform.position).z;
+
+        // 현재 위치 기준으로 타일을 저장
+        currentTile = GetTileUnderPosition(transform.position);
     }
 
     void OnMouseUp()
@@ -66,67 +65,62 @@ public class TowerDragHandler : MonoBehaviour
         }
     }
 
-    private void MoveToTile(TileController targetTile)
+    private TileController GetTileUnderPosition(Vector3 pos)
+    {
+        Ray ray = new Ray(pos + Vector3.up * 5f, Vector3.down);
+        if (Physics.Raycast(ray, out RaycastHit hit, 10f))
+        {
+            return hit.collider.GetComponent<TileController>();
+        }
+        return null;
+    }
+    
+    private void MoveToTile(TileController tile)
     {
         // 원래 타일 비우기
         if (currentTile != null)
             currentTile.towerOnTile = null;
 
         // 새 타일에 자신 배치
-        transform.position = targetTile.transform.position;
-        targetTile.towerOnTile = gameObject;
+        transform.position = tile.transform.position;
+        tile.towerOnTile = gameObject;
 
         // 새 타일을 "현재 타일"로 갱신
-        currentTile = targetTile;
+        currentTile = tile;
     }
-    
+
     private void TryMergeOrSwap(TileController tile)
     {
         GameObject other = tile.towerOnTile;
-        if (other == null) return;
 
-        var thisTower = GetComponent<ITower>();
-        var otherTower = other.GetComponent<ITower>();
-
-        if (thisTower != null && otherTower != null && thisTower.Id == otherTower.Id)
+        // 같은 종류라면 합성
+        if (other != null && other.name == gameObject.name)
         {
-            // 같은 타워라면 합성
-            Debug.Log($"합성 성공! {thisTower.TowerName}");
+            Debug.Log("합성 성공!");
 
+            // 임시: 자기 자신을 "업그레이드된 버전"으로 재생성
             Destroy(other);
-            Destroy(gameObject);
-
-            // 업그레이드된 타워 프리팹 생성 (임시: 자기 자신 복제 후 Upgrade 호출)
-            GameObject merged = Instantiate(other, tile.transform.position, Quaternion.identity);
-            var mergedTower = merged.GetComponent<ITower>();
-            mergedTower?.Upgrade();
+            GameObject merged = Instantiate(gameObject, tile.transform.position, Quaternion.identity);
 
             tile.towerOnTile = merged;
+            Destroy(gameObject);
         }
         else
         {
-            // 자리 교환
+            // 교환 처리
             Debug.Log("자리 교환!");
 
             Vector3 tempPos = other.transform.position;
             other.transform.position = currentTile.transform.position;
             transform.position = tempPos;
 
+            // towerOnTile 교체
             currentTile.towerOnTile = other;
             tile.towerOnTile = gameObject;
+
+            // 자리 이동 후 originalTile 갱신
             currentTile = tile;
         }
-    }
-
-    
-    private TileController GetTileUnderPosition(Vector3 pos)
-    {
-        Ray ray = new Ray(pos + Vector3.up * 2f, Vector3.down); // 조금만 위에서 쏨
-        if (Physics.Raycast(ray, out RaycastHit hit, 10f)) // 타일 전용 Layer
-        {
-            return hit.collider.GetComponent<TileController>();
-        }
-        return null;
     }
 
 }

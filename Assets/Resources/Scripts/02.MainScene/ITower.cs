@@ -3,7 +3,6 @@ using UnityEngine;
 public interface ITower
 {
     int Id { get; }            // 타워 ID
-    int TowerID { get; }
     string TowerName { get; }  // 이름
     int AttackPower { get; }   // 공격력
     float AttackRange { get; } // 공격 범위
@@ -12,5 +11,5 @@ public interface ITower
 
     Sprite TowerImage { get; }
     void Upgrade();
-    void SettingTower();
+    void SettingTower(TowerData data);
 }

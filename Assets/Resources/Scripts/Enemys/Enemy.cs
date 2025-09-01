@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(BoxCollider2D))]
 public class Enemy : MonoBehaviour, IEnemy
 {
     // IEnemy 인터페이스 구현 ------------------
@@ -15,6 +16,13 @@ public class Enemy : MonoBehaviour, IEnemy
     private Transform[] waypoints;
     private int currentIndex = 0;
     private int lapsRemaining = 1;
+
+    private void Awake()
+    {
+        // 2D 충돌체 기본 설정
+        BoxCollider2D col = GetComponent<BoxCollider2D>();
+        col.isTrigger = true; // 발사체가 OnTriggerEnter2D로 들어올 수 있도록
+    }
 
     // 초기화 메서드 (Spawner에서 호출)
     public void Initialize(EnemyData data, int level, GameSceneManager gm, Transform[] waypoints, int laps)
@@ -72,6 +80,7 @@ public class Enemy : MonoBehaviour, IEnemy
     private void Die()
     {
         gm.EnemyKilled(Reward);
+        gm.ActiveEnemyCount--;
         Destroy(gameObject);
     }
 
