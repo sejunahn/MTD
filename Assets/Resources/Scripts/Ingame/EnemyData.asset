@@ -12,10 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3a0a57ba05b6dd40b0b37a6b41597a7, type: 3}
   m_Name: EnemyData
   m_EditorClassIdentifier: 
-  enemyId: M1
+  id: Enemy01
   enemyName: SLIME
-  prefab: {fileID: 6453706971068545793, guid: 247a033bf437b0540a7d80f0824c6af8, type: 3}
   baseHp: 100
-  baseMoveSpeed: 3
-  baseReward: 2
-  trait: 
+  moveSpeed: 2
+  reward: 2

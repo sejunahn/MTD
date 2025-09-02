@@ -1,7 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "TowerData", menuName = "Scriptable Objects/TowerData")]
-
+[CreateAssetMenu(menuName = "Data/TowerData")]
 public class TowerData : ScriptableObject
 {
     public int id;
@@ -9,6 +8,5 @@ public class TowerData : ScriptableObject
     public int attackPower;
     public float attackRange;
     public float attackSpeed;
-    public int sellPrice;
-    public Sprite towerImage;
+    public int cost;
 }
