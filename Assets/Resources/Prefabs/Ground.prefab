@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8247996465160504954}
   - component: {fileID: 4990180872289180197}
   - component: {fileID: 3829440029615080866}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101,7 +101,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60b8668b1b4149c47b8ddea16195c6e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridPos: {x: 0, y: 0}
   tileType: 1
   towerOnTile: {fileID: 0}
 --- !u!61 &3829440029615080866

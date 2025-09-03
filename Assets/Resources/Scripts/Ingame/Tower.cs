@@ -3,27 +3,30 @@ using System.Collections;
 
 public class Tower : MonoBehaviour
 {
-    private int TowerSerial;
     private TowerData data;
     private GameSceneManager gm;
+
     private float attackCooldown;
-    
+    private Camera mainCam;
+    private bool isDragging;
+    private float zOffset;
+    private TileController currentTile;
+
+    // ✅ 구분용: 같은 종류지만 Serial 다르면 합성 불가
+    private int towerSerial;      
+    public int TowerSerial => towerSerial;
+
     public int Level { get; private set; } = 1;
 
-    private Camera mainCam;
-    private bool isDragging = false;
-    private float zOffset;
-
-    private TileController currentTile;
-    
-
-    public void Initialize(TowerData data, int towerSerial, GameSceneManager gm)
+    public void Initialize(TowerData data, int serial, GameSceneManager gm)
     {
         this.data = data;
-        this.TowerSerial = towerSerial;
+        this.towerSerial = serial;
         this.gm = gm;
+
         mainCam = Camera.main;
         attackCooldown = 1f / data.attackSpeed;
+
         StartCoroutine(AttackRoutine());
     }
 
@@ -37,7 +40,10 @@ public class Tower : MonoBehaviour
                 Shoot(target);
                 yield return new WaitForSeconds(attackCooldown);
             }
-            else yield return null;
+            else
+            {
+                yield return null;
+            }
         }
     }
 
@@ -66,15 +72,15 @@ public class Tower : MonoBehaviour
         p.Fire(target, data.attackPower, gm);
     }
 
-    #region TowerMovement
-     void OnMouseDown()
+    #region Drag & Drop
+    private void OnMouseDown()
     {
         isDragging = true;
         zOffset = mainCam.WorldToScreenPoint(transform.position).z;
         currentTile = GetTileUnderPosition(transform.position);
     }
 
-    void OnMouseDrag()
+    private void OnMouseDrag()
     {
         if (!isDragging) return;
 
@@ -85,58 +91,66 @@ public class Tower : MonoBehaviour
         transform.position = worldPos;
     }
 
-    void OnMouseUp()
+    private void OnMouseUp()
     {
         isDragging = false;
 
         TileController targetTile = GetTileUnderPosition(transform.position);
 
-        // 타일이 아니면 원래 자리 복귀
+        // ⬇️ 타일이 없거나 Ground가 아니라면 복귀
         if (targetTile == null || targetTile.tileType != TileType.Ground)
         {
+            Debug.Log("타일이 없거나 그라운드가 아님");
             SnapBack();
             return;
         }
 
-        // 같은 자리 → 복귀
+        // 같은 자리라면 복귀
         if (targetTile == currentTile)
         {
+            Debug.Log("같은자리임");
             SnapBack();
             return;
         }
 
-        // 빈 자리 → 이동
         if (targetTile.IsEmpty)
         {
+            Debug.Log("타일이 비어있다");
             MoveToTile(targetTile);
         }
         else
         {
-            // 다른 타워와 합성 or 교환
+            Debug.Log("머지한다");
             TryMergeOrSwap(targetTile);
         }
     }
 
     private TileController GetTileUnderPosition(Vector3 pos)
     {
-        // 밑으로 Raycast (오브젝트 발 밑에서 땅을 향해 쏨)
         Ray ray = new Ray(pos + Vector3.up * 5f, Vector3.down);
+        
         if (Physics.Raycast(ray, out RaycastHit hit, 10f))
         {
+            Debug.Log("Hit at: " + hit.point + " | Tile pos: " + hit.collider.transform.position);
             return hit.collider.GetComponent<TileController>();
         }
         return null;
     }
-    
+
     private void SnapBack()
     {
         if (currentTile != null)
-            transform.position = currentTile.transform.position;
+        {
+            Vector3 snapPos = currentTile.GetComponent<BoxCollider>().bounds.center;
+            transform.position = snapPos;
+        }
+        // transform.position = currentTile.transform.position;
     }
 
     private void MoveToTile(TileController tile)
     {
-        if (currentTile != null) currentTile.towerOnTile = null;
+        if (currentTile != null)
+            currentTile.towerOnTile = null;
 
         transform.position = tile.transform.position;
         tile.towerOnTile = gameObject;
@@ -148,27 +162,28 @@ public class Tower : MonoBehaviour
         GameObject other = tile.towerOnTile;
         Tower otherTower = other?.GetComponent<Tower>();
 
-        if (otherTower != null && otherTower.data.id == this.data.id)
+        if (otherTower != null)
         {
-            // 합성 (업그레이드)
-            Destroy(other);
-            Destroy(gameObject);
+            // ✅ 같은 종류 && Serial 다르면 합성 가능
+            if (otherTower.data.id == this.data.id && otherTower.TowerSerial != this.TowerSerial)
+            {
+                Destroy(other);
+                Destroy(gameObject);
 
-            GameObject merged = Instantiate(gm.TowerPrefab,
-                                            tile.transform.position, Quaternion.identity);
+                GameObject merged = Instantiate(gm.TowerPrefab, tile.transform.position, Quaternion.identity);
+                tile.towerOnTile = merged;
+            }
+            else
+            {
+                // 자리 교환
+                Vector3 tempPos = other.transform.position;
+                other.transform.position = currentTile.transform.position;
+                transform.position = tempPos;
 
-            tile.towerOnTile = merged;
-        }
-        else
-        {
-            // 교환
-            Vector3 tempPos = other.transform.position;
-            other.transform.position = currentTile.transform.position;
-            transform.position = tempPos;
-
-            currentTile.towerOnTile = other;
-            tile.towerOnTile = gameObject;
-            currentTile = tile;
+                currentTile.towerOnTile = other;
+                tile.towerOnTile = gameObject;
+                currentTile = tile;
+            }
         }
     }
     #endregion
