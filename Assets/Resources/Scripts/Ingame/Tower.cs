@@ -77,7 +77,7 @@ public class Tower : MonoBehaviour
     {
         isDragging = true;
         zOffset = mainCam.WorldToScreenPoint(transform.position).z;
-        currentTile = GetTileUnderPosition(transform.position);
+        currentTile = GetTileUnderPosition(); //GetTileUnderPosition(transform.position);
     }
 
     private void OnMouseDrag()
@@ -95,7 +95,7 @@ public class Tower : MonoBehaviour
     {
         isDragging = false;
 
-        TileController targetTile = GetTileUnderPosition(transform.position);
+        TileController targetTile = GetTileUnderPosition();//GetTileUnderPosition(transform.position);
 
         // ⬇️ 타일이 없거나 Ground가 아니라면 복귀
         if (targetTile == null || targetTile.tileType != TileType.Ground)
@@ -124,12 +124,26 @@ public class Tower : MonoBehaviour
             TryMergeOrSwap(targetTile);
         }
     }
+    
+    
 
     private TileController GetTileUnderPosition(Vector3 pos)
     {
         Ray ray = new Ray(pos + Vector3.up * 5f, Vector3.down);
         
         if (Physics.Raycast(ray, out RaycastHit hit, 10f))
+        {
+            Debug.Log("Hit at: " + hit.point + " | Tile pos: " + hit.collider.transform.position);
+            return hit.collider.GetComponent<TileController>();
+        }
+        return null;
+    }
+
+    private TileController GetTileUnderPosition()
+    {
+        Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
+    
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity))
         {
             Debug.Log("Hit at: " + hit.point + " | Tile pos: " + hit.collider.transform.position);
             return hit.collider.GetComponent<TileController>();
