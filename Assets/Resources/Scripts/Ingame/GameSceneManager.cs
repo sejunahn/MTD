@@ -12,7 +12,7 @@ public class GameSceneManager : MonoBehaviour
     [Header("데이터")]
     [SerializeField] private EnemyData[] enemyDatabase;
     [SerializeField] private TowerData[] towerDatabase;
-
+ 
     [Header("프리팹")]
     [SerializeField] private GameObject enemyPrefab;
     [SerializeField] private GameObject towerPrefab;
