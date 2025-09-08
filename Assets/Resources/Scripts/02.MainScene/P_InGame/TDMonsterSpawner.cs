@@ -40,7 +40,7 @@ public class TDMonsterSpawner : MonoBehaviour
             monsterCountText.text = $"{spawnedCount}/{maxMonstersPerStage}";
 
         if (moneyText != null)
-            moneyText.text = $"Money: {money}";
+            moneyText.text = $"{money}";
 
         if (waitingText != null)
             waitingText.text = ""; // 평소엔 비워둠
@@ -72,24 +72,6 @@ public class TDMonsterSpawner : MonoBehaviour
             stage++;
             waitingText.text = ""; // 대기 끝나면 지움
             UpdateUI();
-        }
-    }
-
-    void SpawnMonster()
-    {
-        if (monsterPrefab == null || monsterParent == null || mapGen == null) return;
-
-        GameObject monster = Instantiate(monsterPrefab, monsterParent);
-        monster.transform.position = mapGen.tiles[0, 0].transform.position;
-
-        TDMonsterMovement move = monster.GetComponent<TDMonsterMovement>();
-        if (move != null)
-            move.InitPath(mapGen.GetMonsterPath());
-
-        TDMonster monsterScript = monster.GetComponent<TDMonster>();
-        if (monsterScript != null)
-        {
-            monsterScript.OnMonsterDied += OnMonsterDied;
         }
     }
 
