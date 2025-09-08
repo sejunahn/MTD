@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3377714915028571335}
   - component: {fileID: 5260819513982224335}
-  - component: {fileID: 4069739279956034228}
   - component: {fileID: 6240403508659280910}
   - component: {fileID: 8707807562783136538}
+  - component: {fileID: -9157887757063383361}
   m_Layer: 5
   m_Name: txt_damagePopup
   m_TagString: Untagged
@@ -47,19 +47,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7558140703905592864}
   m_CullTransparentMesh: 1
---- !u!114 &4069739279956034228
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7558140703905592864}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36e96c78501cef449bdd727911703242, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  textMesh: {fileID: 8707807562783136538}
 --- !u!23 &6240403508659280910
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -199,3 +186,17 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 6240403508659280910}
   m_maskType: 0
+--- !u!114 &-9157887757063383361
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7558140703905592864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36e96c78501cef449bdd727911703242, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveUpSpeed: 1
+  fadeSpeed: 2

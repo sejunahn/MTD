@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using TMPro;
+using System;
 
 public class TDMonster : MonoBehaviour
 {
@@ -96,7 +97,7 @@ public class TDMonster : MonoBehaviour
 
         Vector3 spawnPos = transform.position + Vector3.up * 1.5f;
         GameObject popup = Instantiate(damagePopupPrefab, spawnPos, Quaternion.identity, popupParent);
-        popup.GetComponent<DamagePopup>().Setup(dmg);
+        popup.GetComponent<TDDamagePopup>().Setup(dmg);
     }
 
     void Update()
@@ -118,8 +119,10 @@ public class TDMonster : MonoBehaviour
             healthBarRoot.forward = Camera.main.transform.forward;
     }
 
+    public event Action<TDMonster> OnMonsterDied;
     void Die()
     {
+        OnMonsterDied?.Invoke(this);
         Destroy(gameObject);
     }
     

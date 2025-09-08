@@ -167,7 +167,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: -493647738, guid: 3bcb7877229a5334da528f2f0872b5c3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -259,6 +259,8 @@ MonoBehaviour:
   healthFill: {fileID: 4391580988722840780}
   damagePopupPrefab: {fileID: 7558140703905592864, guid: 77e1de401de055a4383e5b0f98695a0e, type: 3}
   popupParent: {fileID: 7798704863063770267}
+  speed: 2
+  renderer: {fileID: 8579766118926335003}
 --- !u!1 &6785174063473136703
 GameObject:
   m_ObjectHideFlags: 0

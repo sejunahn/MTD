@@ -1,17 +1,17 @@
 using UnityEngine;
 using TMPro;
 
-public class DamagePopup : MonoBehaviour
+public class TDDamagePopup : MonoBehaviour
 {
     public float moveUpSpeed = 1f;
     public float fadeSpeed = 2f;
 
-    private TextMeshProUGUI textMesh;
+    private TMP_Text textMesh;
     private Color textColor;
 
     void Awake()
     {
-        textMesh = GetComponent<TextMeshProUGUI>();
+        textMesh = GetComponent<TMP_Text>();
         textColor = textMesh.color;
     }
 
