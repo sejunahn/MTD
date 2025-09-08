@@ -3,28 +3,35 @@ using TMPro;
 
 public class DamagePopup : MonoBehaviour
 {
-    public TextMeshPro textMesh;
+    public float moveUpSpeed = 1f;
+    public float fadeSpeed = 2f;
 
+    private TextMeshProUGUI textMesh;
     private Color textColor;
-    private float moveSpeed = 1f;
-    private float fadeSpeed = 2f;
+
+    void Awake()
+    {
+        textMesh = GetComponent<TextMeshProUGUI>();
+        textColor = textMesh.color;
+    }
 
     public void Setup(int damage)
     {
         textMesh.text = "-" + damage;
-        textColor = Color.red;
         textColor.a = 1f;
         textMesh.color = textColor;
     }
 
     void Update()
     {
-        transform.position += Vector3.up * moveSpeed * Time.deltaTime;
+        // ���� �̵�
+        transform.position += new Vector3(0, moveUpSpeed * Time.deltaTime, 0);
 
+        // ���� ��������
         textColor.a -= fadeSpeed * Time.deltaTime;
         textMesh.color = textColor;
 
-        if (textColor.a <= 0f)
+        if (textColor.a <= 0)
             Destroy(gameObject);
     }
 }

@@ -1,16 +1,17 @@
 using UnityEngine;
 using TMPro;
 using System.Collections;
+using System.Collections.Generic;
 
 public class TDMonsterSpawner : MonoBehaviour
 {
     [Header("Spawn Settings")]
-    public GameObject monsterPrefab;   // ¸ó½ºÅÍ ÇÁ¸®ÆÕ
+    public GameObject monsterPrefab;   // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     public Transform monsterParent;    // MonsterParent
-    public TDMapGenerator mapGen;      // ¸Ê Á¦³Ê·¹ÀÌÅÍ ÂüÁ¶
-    public float spawnInterval = 2f;   // ¸ó½ºÅÍ »ý¼º ÁÖ±â
-    public int maxMonstersPerStage = 30; // ½ºÅ×ÀÌÁö´ç ÃÖ´ë ¸ó½ºÅÍ ¼ö
-    public float stageDelay = 10f;     // ¸ó½ºÅÍ ´Ù ³ª¿À°í ½¬´Â ½Ã°£
+    public TDMapGenerator mapGen;      // ï¿½ï¿½ ï¿½ï¿½ï¿½Ê·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    public float spawnInterval = 2f;   // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö±ï¿½
+    public int maxMonstersPerStage = 30; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
+    public float stageDelay = 10f;     // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½
 
     [Header("UI")]
     public TMP_Text monsterCountText;
@@ -18,6 +19,8 @@ public class TDMonsterSpawner : MonoBehaviour
     private int spawnedCount = 0;
     private bool stageActive = true;
 
+    [SerializeField] private List<MonsterData> monsterData;
+    
     void Start()
     {
         UpdateUI();
@@ -47,7 +50,7 @@ public class TDMonsterSpawner : MonoBehaviour
                 yield return new WaitForSeconds(spawnInterval);
             }
 
-            // ¸ó½ºÅÍ°¡ ¸ðµÎ ³ª¿Â ÈÄ 10ÃÊ ´ë±â
+            // ï¿½ï¿½ï¿½Í°ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ 10ï¿½ï¿½ ï¿½ï¿½ï¿½
             stageActive = false;
             for (int i = Mathf.RoundToInt(stageDelay); i > 0; i--)
             {
@@ -56,7 +59,7 @@ public class TDMonsterSpawner : MonoBehaviour
                 yield return new WaitForSeconds(1f);
             }
 
-            // ´ÙÀ½ ½ºÅ×ÀÌÁö¸¦ À§ÇØ ÃÊ±âÈ­
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
             UpdateUI();
         }
     }
@@ -66,12 +69,20 @@ public class TDMonsterSpawner : MonoBehaviour
         if (monsterPrefab == null || monsterParent == null || mapGen == null) return;
 
         GameObject monster = Instantiate(monsterPrefab, monsterParent);
-
-        // ½ÃÀÛ À§Ä¡ = ÁÂ»ó´Ü
         monster.transform.position = mapGen.tiles[0, 0].transform.position;
-
         TDMonsterMovement move = monster.GetComponent<TDMonsterMovement>();
         if (move != null)
             move.InitPath(mapGen.GetMonsterPath());
+    }
+
+    public void SpawnMonsters(int level)
+    {
+        if (monsterPrefab == null || monsterParent == null || mapGen == null) return;
+        
+        MonsterData data = monsterData.Find(x => level == x.level);
+        GameObject monster = Instantiate(monsterPrefab, Vector3.zero, Quaternion.identity, monsterParent);
+        TDMonster tDMonster = monster.GetComponent<TDMonster>();
+        tDMonster.InitMonster(data);
+        tDMonster.InitPath(mapGen.GetMonsterPath());
     }
 }

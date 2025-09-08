@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a84cbfc1e932afe44a0fab2811a9a977, type: 3}
   m_Name: M0003
   m_EditorClassIdentifier: 
-  hp: 60
-  speed: 3
+  level: 3
+  hp: 40
+  speed: 2
   armor: 0
-  img_sprite: {fileID: 0}
+  img_sprite: {fileID: 626918169, guid: c4d2ccab0c2ad7e47853b6e31a7ac7c2, type: 3}

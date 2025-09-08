@@ -2026,6 +2026,14 @@ MonoBehaviour:
   monsterParent: {fileID: 70325182}
   mapGen: {fileID: 1695477671}
   spawnInterval: 2
+  maxMonstersPerStage: 30
+  stageDelay: 10
+  monsterCountText: {fileID: 0}
+  monsterData:
+  - {fileID: 11400000, guid: 1fb2c00c53e19bd489bb4fe266c1694f, type: 2}
+  - {fileID: 11400000, guid: 4a5ba70a49515e947a63bbe2a3f53794, type: 2}
+  - {fileID: 11400000, guid: 925feea8607470449b71f3c4bfc4bbbe, type: 2}
+  - {fileID: 11400000, guid: 36160c5e150fc924ab809f40baa18d0b, type: 2}
 --- !u!4 &1980621154
 Transform:
   m_ObjectHideFlags: 0

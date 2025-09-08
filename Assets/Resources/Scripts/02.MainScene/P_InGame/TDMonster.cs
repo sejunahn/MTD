@@ -20,6 +20,27 @@ public class TDMonster : MonoBehaviour
     public GameObject damagePopupPrefab; // TextMeshPro 3D prefab
     public Transform popupParent;        // DamagePopup이 들어갈 부모 (없으면 null)
 
+    private TDTileData[] path;
+    private int currentIndex = 0;
+    public float speed = 2f;
+    [SerializeField] private SpriteRenderer renderer;
+
+    public void InitMonster(MonsterData monsterData)
+    {
+        currentHp = monsterData.hp;
+        speed = monsterData.speed;
+        renderer.sprite = monsterData.img_sprite;
+    }
+    public void InitPath(TDTileData[] pathData)
+    {
+        path = pathData;
+        currentIndex = 0;
+
+        if (path.Length > 0)
+            transform.position = path[0].transform.position;
+    }
+
+    
     void Start()
     {
         currentHp = maxHp;
@@ -80,6 +101,8 @@ public class TDMonster : MonoBehaviour
 
     void Update()
     {
+        Moving();
+        
         if (visible)
         {
             hideTimer -= Time.deltaTime;
@@ -99,4 +122,21 @@ public class TDMonster : MonoBehaviour
     {
         Destroy(gameObject);
     }
+    
+    void Moving()
+    {
+        if (path == null || path.Length == 0) return;
+
+        Vector3 targetPos = path[currentIndex].transform.position;
+        transform.position = Vector3.MoveTowards(transform.position, targetPos, speed * Time.deltaTime);
+
+        if (Vector3.Distance(transform.position, targetPos) < 0.01f)
+        {
+            currentIndex++;
+            if (currentIndex >= path.Length)
+                currentIndex = 0;      
+        }
+    }
+
+    
 }
