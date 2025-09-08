@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class MonsterMovement : MonoBehaviour
+public class TDMonsterMovement : MonoBehaviour
 {
     private TDTileData[] path;
     private int currentIndex = 0;
