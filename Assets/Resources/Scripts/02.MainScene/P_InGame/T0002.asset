@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: T0002
   m_EditorClassIdentifier: 
   damage: 15
-  range: 3
-  attack_cooltime: 2
+  range: 5
+  attack_cooltime: 1.5
   tower_sprite: {fileID: 1363809998, guid: 0c187a32c5bde4747be8d00770b07403, type: 3}
   projectile_sprite: {fileID: 0}

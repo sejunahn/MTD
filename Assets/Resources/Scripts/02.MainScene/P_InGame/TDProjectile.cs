@@ -5,6 +5,12 @@ public class TDProjectile : MonoBehaviour
     public float speed = 5f;
     public int damage = 10;
     private Transform target;
+    private TDProjectilePool pool;
+
+    public void SetPool(TDProjectilePool pool)
+    {
+        this.pool = pool;
+    }
 
     public void Init(Transform target, int damage)
     {
@@ -16,22 +22,28 @@ public class TDProjectile : MonoBehaviour
     {
         if (target == null)
         {
-            Destroy(gameObject);
+            ReturnToPool();
             return;
         }
 
         Vector3 dir = (target.position - transform.position).normalized;
         transform.position += dir * speed * Time.deltaTime;
 
-        // 거리 체크
         if (Vector3.Distance(transform.position, target.position) < 0.1f)
         {
             TDMonster monster = target.GetComponent<TDMonster>();
             if (monster != null)
-            {
                 monster.TakeDamage(damage);
-            }
-            Destroy(gameObject);
+
+            ReturnToPool();
         }
+    }
+
+    void ReturnToPool()
+    {
+        if (pool != null)
+            pool.ReturnProjectile(this);
+        else
+            Destroy(gameObject);
     }
 }

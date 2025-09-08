@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: M0004
   m_EditorClassIdentifier: 
   level: 4
-  hp: 100
+  hp: 500
   speed: 1
   armor: 0
   img_sprite: {fileID: 1782705385, guid: d33598d781682e049a53a0a13104ef29, type: 3}

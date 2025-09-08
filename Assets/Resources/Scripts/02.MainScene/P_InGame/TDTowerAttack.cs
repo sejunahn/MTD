@@ -5,7 +5,7 @@ public class TDTowerAttack : MonoBehaviour
     public float range = 3f;
     public float attackCooldown = 1f;
     private float timer;
-    public GameObject projectilePrefab;
+    //public TDProjectilePool projectilePool; // 총알 풀
     private int damage = 10;
 
     void Update()
@@ -41,8 +41,11 @@ public class TDTowerAttack : MonoBehaviour
 
     void Shoot(Transform target)
     {
-        GameObject proj = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
-        TDProjectile p = proj.GetComponent<TDProjectile>();
-        p.Init(target, damage); // 10 ������
+        TDProjectile proj = TDProjectilePool.Instance.GetProjectile();
+        proj.gameObject.SetActive(true);
+        proj.transform.position = transform.position;
+        proj.Init(target, damage);
     }
+
+
 }
