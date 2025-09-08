@@ -1,12 +1,23 @@
 using UnityEngine;
 
-public class TDTowerAttack : MonoBehaviour
+public class Tower : MonoBehaviour
 {
-    public float range = 3f;
-    public float attackCooldown = 1f;
+    
+    private int damage = 10;
+    private float range = 3f;
+    private float attackCooldown = 1f;
     private float timer;
     public GameObject projectilePrefab;
-    private int damage = 10;
+
+    [SerializeField] private SpriteRenderer towerRenderer;
+    
+    public void Init(TowerData data)
+    {
+        damage = data.damage;
+        range = data.range;
+        attackCooldown = data.attack_cooltime;
+        towerRenderer.sprite = data.tower_sprite;
+    }
 
     void Update()
     {

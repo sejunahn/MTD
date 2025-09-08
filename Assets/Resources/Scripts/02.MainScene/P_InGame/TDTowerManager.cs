@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class TDTowerManager : MonoBehaviour
@@ -5,6 +6,7 @@ public class TDTowerManager : MonoBehaviour
     public GameObject towerPrefab;
     public Transform towerParent;
     private TDMapGenerator mapGen;
+    [SerializeField] private List<TowerData> l_towerData;
 
     void Start()
     {
@@ -24,12 +26,18 @@ public class TDTowerManager : MonoBehaviour
 
                     TDTowerDrag drag = tower.GetComponent<TDTowerDrag>();
                     drag.mapGen = mapGen;
-                    drag.InitTile(tile); // ÃÊ±â Å¸ÀÏ ÁöÁ¤ + Occupied Ã³¸®
+                    drag.InitTile(tile); // ï¿½Ê±ï¿½ Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ + Occupied Ã³ï¿½ï¿½
+
+                    Tower temp = tower.GetComponent<Tower>();
+
+                    int rand = Random.Range(0, l_towerData.Count - 1);
+                    
+                    temp.Init(l_towerData[rand]);
 
                     return;
                 }
             }
         }
-        Debug.Log("ºó Å¸ÀÏÀÌ ¾ø½À´Ï´Ù!");
+        Debug.Log("ï¿½ï¿½ Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½!");
     }
 }

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6568136514404888367}
   - component: {fileID: 7509820423386479864}
   - component: {fileID: 2634481396400080925}
+  - component: {fileID: 7534544595145999282}
   m_Layer: 0
   m_Name: Tower
   m_TagString: Untagged
@@ -147,7 +148,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8827396426117554832}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bc19a3101856f4c4ca1b9f67f405d1ea, type: 3}
   m_Name: 
@@ -162,11 +163,24 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8827396426117554832}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6b11a190e77d45745baa2df5466e4baa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  level: 1
-  damage: 10
-  range: 1.5
+--- !u!114 &7534544595145999282
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8827396426117554832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1590c740d8f7a104c8e0d10263fc5283, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  range: 3
+  attackCooldown: 1
+  projectilePrefab: {fileID: 6065116534939591883, guid: 6f8338565f7b7034c961f1695b5f29bb, type: 3}
+  towerRenderer: {fileID: 8525584606851826943}
