@@ -102,6 +102,7 @@ public class TDMonsterSpawner : MonoBehaviour
         TDMonster tDMonster = monster.GetComponent<TDMonster>();
         tDMonster.InitMonster(data);
         tDMonster.InitPath(mapGen.GetMonsterPath());
+        tDMonster.OnMonsterDied += OnMonsterDied;
     }
 
     private void OnMonsterDied(TDMonster monster)
