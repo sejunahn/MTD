@@ -25,6 +25,8 @@ public class TDMonsterSpawner : MonoBehaviour
 
     [SerializeField] private List<MonsterData> monsterData;
 
+    public int CurrentMoney => money; // 💰 외부에서 읽기 전용 접근
+
     void Start()
     {
         UpdateUI();
@@ -43,7 +45,7 @@ public class TDMonsterSpawner : MonoBehaviour
             moneyText.text = $"{money}";
 
         if (waitingText != null)
-            waitingText.text = ""; // 평소엔 비워둠
+            waitingText.text = "";
     }
 
     IEnumerator StageLoop()
@@ -70,7 +72,7 @@ public class TDMonsterSpawner : MonoBehaviour
             }
 
             stage++;
-            waitingText.text = ""; // 대기 끝나면 지움
+            waitingText.text = "";
             UpdateUI();
         }
     }
@@ -91,5 +93,17 @@ public class TDMonsterSpawner : MonoBehaviour
     {
         money += 50;
         UpdateUI();
+    }
+
+    // 💰 돈 차감 시도 (성공하면 true)
+    public bool TrySpend(int amount)
+    {
+        if (money >= amount)
+        {
+            money -= amount;
+            UpdateUI();
+            return true;
+        }
+        return false;
     }
 }

@@ -250,7 +250,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 433805250}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -260,7 +260,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 50}
+  m_SizeDelta: {x: 400, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &433805252
 MonoBehaviour:
@@ -2075,6 +2075,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   towerPrefab: {fileID: 8827396426117554832, guid: 9a12821b10f625a448e339071987b147, type: 3}
   towerParent: {fileID: 1106317386}
+  l_towerData: []
+  spawner: {fileID: 1980621153}
+  nextPriceText: {fileID: 433805252}
 --- !u!4 &1723578327
 Transform:
   m_ObjectHideFlags: 0
