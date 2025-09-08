@@ -80,7 +80,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: -1413294825, guid: 99a24620d31e5ce4e823c32d11e17c2c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -180,7 +180,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1590c740d8f7a104c8e0d10263fc5283, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  range: 3
-  attackCooldown: 1
   projectilePrefab: {fileID: 6065116534939591883, guid: 6f8338565f7b7034c961f1695b5f29bb, type: 3}
   towerRenderer: {fileID: 8525584606851826943}

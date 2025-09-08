@@ -21,7 +21,7 @@ public class TDMonsterSpawner : MonoBehaviour
 
     private int spawnedCount = 0;
     private int stage = 1;
-    private int money = 0;
+    private int money = 100000;
 
     [SerializeField] private List<MonsterData> monsterData;
 

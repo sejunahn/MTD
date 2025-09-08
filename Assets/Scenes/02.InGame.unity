@@ -2075,7 +2075,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   towerPrefab: {fileID: 8827396426117554832, guid: 9a12821b10f625a448e339071987b147, type: 3}
   towerParent: {fileID: 1106317386}
-  l_towerData: []
+  l_towerData:
+  - {fileID: 11400000, guid: fb4cd597baf0baf44a9b00a50d2e4a77, type: 2}
+  - {fileID: 11400000, guid: 282249c71a8b7f4458eb0213ab466d31, type: 2}
+  - {fileID: 11400000, guid: 542f347a04417df4a9d95a58b836805e, type: 2}
   spawner: {fileID: 1980621153}
   nextPriceText: {fileID: 433805252}
 --- !u!4 &1723578327

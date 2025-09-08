@@ -5,8 +5,8 @@ using System;
 public class TDMonster : MonoBehaviour
 {
     [Header("Stats")]
-    public int maxHp = 50;
     private int currentHp;
+    private int maxHp;
 
     [Header("Health Bar (SpriteRenderer)")]
     public Transform healthBarRoot;    // 빈 막대 (Empty)
@@ -28,6 +28,7 @@ public class TDMonster : MonoBehaviour
 
     public void InitMonster(MonsterData monsterData)
     {
+        maxHp = monsterData.hp;
         currentHp = monsterData.hp;
         speed = monsterData.speed;
         renderer.sprite = monsterData.img_sprite;
@@ -44,7 +45,6 @@ public class TDMonster : MonoBehaviour
     
     void Start()
     {
-        currentHp = maxHp;
         if (healthFill != null)
             originalFillScale = healthFill.localScale;
 

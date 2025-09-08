@@ -81,7 +81,7 @@ public class TDTowerDrag : MonoBehaviour, IPointerDownHandler, IDragHandler, IPo
     {
         // 드래그 끝났으니 SortingOrder 원상복구
         if (sr != null)
-            sr.sortingOrder = 0;
+            sr.sortingOrder = 1;
     }
 
     void OnMouseDown()
