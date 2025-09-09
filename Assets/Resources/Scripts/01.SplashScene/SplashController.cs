@@ -4,37 +4,38 @@ using System.Collections;
 
 public class SplashController : MonoBehaviour
 {
-    [Header("Fade ¼³Á¤")]
-    public Image fadeImage;          // ÀüÃ¼ È­¸éÀ» µ¤´Â Èò»ö/°ËÀº»ö Image
-    public float fadeDuration = 1f;  // ÆäÀÌµå ÀÎ/¾Æ¿ô ½Ã°£
-    public float stayDuration = 2f;  // ÆäÀÌµå ÈÄ À¯Áö ½Ã°£
+    [Header("Fade ï¿½ï¿½ï¿½ï¿½")]
+    public Image fadeImage;          // ï¿½ï¿½Ã¼ È­ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Image
+    public float fadeDuration = 1f;  // ï¿½ï¿½ï¿½Ìµï¿½ ï¿½ï¿½/ï¿½Æ¿ï¿½ ï¿½Ã°ï¿½
+    public float stayDuration = 2f;  // ï¿½ï¿½ï¿½Ìµï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½
 
     private void Start()
     {
-        // ½ÃÀÛ ½Ã ÄÚ·çÆ¾ ½ÇÇà
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ú·ï¿½Æ¾ ï¿½ï¿½ï¿½ï¿½
         StartCoroutine(SplashFlow());
     }
 
     private IEnumerator SplashFlow()
     {
-        // 1. ÆäÀÌµå ÀÎ (°ËÀº È­¸é ¡æ Åõ¸í)
+        // 1. ï¿½ï¿½ï¿½Ìµï¿½ ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
         yield return StartCoroutine(Fade(1f, 0f));
 
-        // 2. À¯Áö
+        // 2. ï¿½ï¿½ï¿½ï¿½
         yield return new WaitForSeconds(stayDuration);
 
-        // 3. ÆäÀÌµå ¾Æ¿ô (Åõ¸í ¡æ °ËÀº È­¸é)
+        // 3. ï¿½ï¿½ï¿½Ìµï¿½ ï¿½Æ¿ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½)
         yield return StartCoroutine(Fade(0f, 1f));
 
-        // 4. Main ¾ÀÀ¸·Î ÀüÈ¯
-        PageManager.LoadScene(PageManager.Scenes.Main);
+        // 4. Main ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
+        // PageManager.LoadScene(PageManager.Scenes.Main);
+        SceneTransitionManager.Instance.TransitionToScene(PageManager.Scenes.Main);
     }
 
     private IEnumerator Fade(float fromAlpha, float toAlpha)
     {
         if (fadeImage == null)
         {
-            Debug.LogError("SplashController: fadeImage°¡ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù.");
+            Debug.LogError("SplashController: fadeImageï¿½ï¿½ ï¿½Ò´ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾Ò½ï¿½ï¿½Ï´ï¿½.");
             yield break;
         }
 
@@ -49,7 +50,7 @@ public class SplashController : MonoBehaviour
             yield return null;
         }
 
-        // ÃÖÁ¾ ¾ËÆÄ°ª È®½ÇÇÏ°Ô Àû¿ë
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ä°ï¿½ È®ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½
         fadeImage.color = new Color(color.r, color.g, color.b, toAlpha);
     }
 }
