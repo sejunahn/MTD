@@ -28,7 +28,7 @@ public class SplashController : MonoBehaviour
 
         // 4. Main ������ ��ȯ
         // PageManager.LoadScene(PageManager.Scenes.Main);
-        SceneTransitionManager.Instance.TransitionToScene(PageManager.Scenes.Main);
+        SceneTransitionManager.Instance.TransitionToScene(PageManager.Scenes.InGame);
     }
 
     private IEnumerator Fade(float fromAlpha, float toAlpha)

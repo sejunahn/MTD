@@ -5,3 +5,6 @@ Assembly-CSharp.csproj
 obj/Debug/Assembly-CSharp.csproj.AssemblyReference.cache
 /obj
 /.vs
+/.idea
+/.utmp
+/obj
