@@ -21,11 +21,27 @@ public class TDTowerManager : MonoBehaviour
     // 가격 테이블
     private int[] towerPrices = { 0, 100, 300, 600, 1000, 1500 };
 
+    public int atk_ref = 1;
+    public int range_ref = 1;
+    public int spd_ref = 1;
+
+    [SerializeField] List<Tower> towers = new List<Tower>();
+
+    private int ATKUPPrice = 100;
+    private int RangeUPPrice = 500;
+    private int SPDUPPrice = 1000;
+
+    [SerializeField] private TextMeshProUGUI ATKUPText;
+    [SerializeField] private TextMeshProUGUI RANGEUPText;
+    [SerializeField] private TextMeshProUGUI SPDUPText;
+
+    
     void Start()
     {
         mapGen = FindObjectOfType<TDMapGenerator>();
         if (spawner == null) spawner = FindObjectOfType<TDMonsterSpawner>();
         UpdatePriceUI();
+        UpdateUpgradeUI();
     }
 
     void Update()
@@ -68,8 +84,9 @@ public class TDTowerManager : MonoBehaviour
                     if (temp != null && l_towerData.Count > 0)
                     {
                         int rand = Random.Range(0, l_towerData.Count);
-                        temp.Init(l_towerData[rand]);
+                        temp.Init(this,l_towerData[rand]);
                     }
+                    towers.Add(temp);
 
                     Debug.Log($"타워 소환! 현재 {currentTowerCount}개, 다음 가격 {GetNextTowerPrice()}");
                     return;
@@ -99,5 +116,50 @@ public class TDTowerManager : MonoBehaviour
             else
                 nextPriceText.color = Color.red;   // 부족
         }
+    }
+
+    private void UpdateUpgradeUI()
+    {
+        ATKUPText.text = (atk_ref * ATKUPPrice).ToString();
+        RANGEUPText.text = (range_ref * RangeUPPrice).ToString();
+        SPDUPText.text = (spd_ref * SPDUPPrice).ToString();
+    }
+
+    public void ATKUpgrade()
+    {
+        if (spawner.CurrentMoney <= atk_ref * ATKUPPrice)
+            return;
+        foreach (var item in towers)
+        {
+            item.UpgradeTower(UpgradeType.Damage);
+        }
+
+        atk_ref++;
+
+        UpdateUpgradeUI();
+    }
+    public void RangeUpgrade()
+    {
+        if (spawner.CurrentMoney <= range_ref * RangeUPPrice)
+            return;
+        foreach (var item in towers)
+        {
+            item.UpgradeTower(UpgradeType.Range);
+        }
+
+        range_ref++;
+        UpdateUpgradeUI();
+    }
+    public void SPDUpgrade()
+    {
+        if (spawner.CurrentMoney <= spd_ref * SPDUPPrice)
+            return;
+        foreach (var item in towers)
+        {
+            item.UpgradeTower(UpgradeType.Cooltime);
+        }
+
+        spd_ref++;
+        UpdateUpgradeUI();
     }
 }

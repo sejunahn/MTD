@@ -3,7 +3,7 @@ using UnityEngine;
 public class TDProjectile : MonoBehaviour
 {
     public float speed = 5f;
-    public int damage = 10;
+    public float damage = 10;
     private Transform target;
     private TDProjectilePool pool;
 
@@ -12,7 +12,7 @@ public class TDProjectile : MonoBehaviour
         this.pool = pool;
     }
 
-    public void Init(Transform target, int damage)
+    public void Init(Transform target, float damage)
     {
         this.target = target;
         this.damage = damage;

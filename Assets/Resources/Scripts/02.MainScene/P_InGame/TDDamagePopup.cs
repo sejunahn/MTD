@@ -15,7 +15,7 @@ public class TDDamagePopup : MonoBehaviour
         textColor = textMesh.color;
     }
 
-    public void Setup(int damage)
+    public void Setup(float damage)
     {
         textMesh.text = "-" + damage;
         textColor.a = 1f;

@@ -5,7 +5,7 @@ using System;
 public class TDMonster : MonoBehaviour
 {
     [Header("Stats")]
-    private int currentHp;
+    private float currentHp;
     private int maxHp;
 
     [Header("Health Bar (SpriteRenderer)")]
@@ -53,7 +53,7 @@ public class TDMonster : MonoBehaviour
             healthBarRoot.gameObject.SetActive(false);
     }
 
-    public void TakeDamage(int dmg)
+    public void TakeDamage(float dmg)
     {
         currentHp -= dmg;
         if (currentHp <= 0)
@@ -91,7 +91,7 @@ public class TDMonster : MonoBehaviour
         hideTimer = hideDelay;
     }
 
-    void ShowDamagePopup(int dmg)
+    void ShowDamagePopup(float dmg)
     {
         if (damagePopupPrefab == null) return;
 
